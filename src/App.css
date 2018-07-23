@@ -1,0 +1,7 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~bootswatch/cyborg/bootstrap.css";
+
+body{
+    color:white;
+    font-family:'Source Code Pro';
+}
