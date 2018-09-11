@@ -1,21 +1,269 @@
 import React, {Component} from 'react';
 
-import {Button} from 'react-bootstrap';
+import {Grid, Row, Col, Table, Button, Checkbox, DropdownButton, MenuItem, Glyphicon} from 'react-bootstrap';
+
+import Player from '../models/Player';
+
+import spells from '../models/spells';
+
+import elements from '../models/elements';
+
+import relics from '../models/relics';
 
 export default class TeamBuilder extends Component{
     
     constructor(props){
         super(props);
+        
+        this.state = {
+            team1: this.props.team1,
+            team2: this.props.team2
+        }
+        
+        this.renderTeam = this.renderTeam.bind(this);
+        this.renderPlayer = this.renderPlayer.bind(this);
+        this.renderEditableProperty = this.renderEditableProperty.bind(this);
+        this.addMember = this.addMember.bind(this);
+        this.removeMember = this.removeMember.bind(this);
+        this.addSpell = this.addSpell.bind(this);
+        this.removeSpell = this.removeSpell.bind(this);
+        this.addRelic = this.addRelic.bind(this);
+        this.removeRelic = this.removeRelic.bind(this);        
+        this.loadTeam = this.loadTeam.bind(this);
+        this.saveTeam = this.saveTeam.bind(this);
+    }
+    
+    loadTeam(existingTeam){
+        const savedTeams = JSON.parse(localStorage.getItem('SAVED_TEAMS')) || {}        
+        const identifier = prompt('Enter identifier for team to load\n' + Object.keys(savedTeams).join(', '));
+        const team = savedTeams[identifier];
+        if(!team) return alert('Team not found');
+        if(this.state.team1 === existingTeam) this.state.team1 = team;
+        if(this.state.team2 === existingTeam) this.state.team2 = team;        
+        this.setState({});        
+    }
+    
+    saveTeam(team){
+        const savedTeams = JSON.parse(localStorage.getItem('SAVED_TEAMS')) || {}
+        const identifier = prompt('Enter identifier for team');
+        savedTeams[identifier] = team;
+        localStorage.setItem('SAVED_TEAMS', JSON.stringify(savedTeams));
+    }
+    
+    setProperty(player, property, value){
+        player[property] = value;
+        this.setState({});
+    }
+    
+    addMember(team){
+        team.players.push(new Player(''))
+        this.setState({});
+    }
+    
+    addSpell(player, spell){
+        player.spells.push(spell);
+        this.setState({});
+    }
+    
+    removeSpell(player, spell){
+        player.spells = player.spells.filter(x => x !== spell);
+        this.setState({});
+    }
+    
+    addRelic(player, relic){
+        player.relics.push(relic);
+        this.setState({});
+    }
+    
+    removeRelic(player, relic){
+        player.relics = player.relics.filter(x => x !== relic);
+        this.setState({});
+    }
+    
+    removeMember(player){
+        this.state.team1.players = this.state.team1.players.filter(x => x !== player)
+        this.state.team2.players = this.state.team2.players.filter(x => x !== player)        
+        this.setState({});
+    }
+    
+    renderTeam(team){
+        const {name, players} = team;
+        return (
+            <div>
+                <div>
+                    <Button block onClick={() => this.loadTeam(team)}>Load Team</Button>
+                </div>
+                <h3>
+                    {this.renderEditableProperty(team, 'name', name)}
+                </h3>
+                <div>
+                    {players.map((player, i) => this.renderPlayer(player))}
+                </div>
+                <div>
+                    <Button block onClick={() => this.addMember(team)}>Add Member</Button>
+                </div>
+                <div>
+                    <Button block onClick={() => this.saveTeam(team)}>Save Team</Button>
+                </div>
+            </div>
+        );
+    }
+    
+    renderPlayer(player){
+        const {name, maxHealth, attack, defense, weapon, armour, magicAttack, magicDefense, speed, spells, relics, ai} = player;
+        return (
+            <div>
+                <h5>
+                    {this.renderEditableProperty(player, 'name', name)}
+                    <span>&nbsp;</span>
+                    <Button onClick={() => this.removeMember(player)}>Remove</Button>
+                    <span>&nbsp;</span> 
+                    <input type="checkbox" checked={ai} onClick={(e) => this.setProperty(player, 'ai', e.target.checked)} />
+                    <span> AI</span>
+                </h5>
+                <Table>
+                    <tbody>
+                        <tr>
+                            <td>Health</td>
+                            <td>
+                                {this.renderEditableProperty(player, 'maxHealth', maxHealth)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Element</td>
+                            <td>
+                                {this.renderElementProperty(player)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Attack</td>
+                            <td>
+                                {this.renderEditableProperty(player, 'attack', attack)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Weapon Modifer</td>
+                            <td>
+                                {this.renderEditableProperty(weapon, 'modifier', weapon.modifier)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Weapon Element</td>
+                            <td>
+                                {this.renderElementProperty(weapon)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Magic Attack</td>
+                            <td>
+                                {this.renderEditableProperty(player, 'magicAttack', magicAttack)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Defense</td>
+                            <td>
+                                {this.renderEditableProperty(player, 'defense', defense)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Magic Defense</td>
+                            <td>
+                                {this.renderEditableProperty(player, 'magicDefense', magicDefense)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Armour Modifer</td>
+                            <td>
+                                {this.renderEditableProperty(armour, 'modifier', armour.modifier)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Armour Magic Modifer</td>
+                            <td>
+                                {this.renderEditableProperty(armour, 'magicModifier', armour.magicModifier)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Armour Element</td>
+                            <td>
+                                {this.renderElementProperty(armour)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Speed</td>
+                            <td>
+                                {this.renderEditableProperty(player, 'speed', speed)}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Spells</td>
+                            <td>
+                                {spells.map(spell => <div>{spell.name} <Button onClick={() => this.removeSpell(player, spell)}><Glyphicon glyph="remove" /></Button></div>)}                                                            
+                                <SpellDropdown onSelect={(spell) => this.addSpell(player, spell)} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Relics</td>
+                            <td>
+                                {relics.map(relic => <div>{relic.name} <Button onClick={() => this.removeRelic(player, relic)}><Glyphicon glyph="remove" /></Button></div>)}                                                            
+                                <RelicDropdown onSelect={(relic) => this.addRelic(player, relic)} />
+                            </td>
+                        </tr>
+                    </tbody>
+                </Table>
+            </div>
+        );
+    }
+    
+    renderEditableProperty(entity, property, value){
+        return (
+            <input type="text" value={value} onChange={(e) => this.setProperty(entity, property, e.target.value)} />
+        );
+    }
+    
+    renderElementProperty(entity){
+        return (<select onChange={e => this.setProperty(entity, 'element', elements.find(el => el.name === e.target.value))}>
+            <option value={undefined}>None</option>
+            {elements.map(element => <option selected={entity.element === element}>{element.name}</option>)}
+        </select>);
     }
     
     render(){
         return (
-            <div>
-                <div>Team Builder</div>
-                <Button onClick={() => this.props.saveTeams(this.props.team1, this.props.team2)}>Save</Button>
-            </div>
+            <Grid>
+                <Row>
+                    <Col xs={6}>
+                        {this.renderTeam(this.state.team1)}
+                    </Col>
+                    <Col xs={6}>
+                        {this.renderTeam(this.state.team2)}
+                    </Col>                            
+                </Row>
+                <hr/>
+                <Row>
+                    <Button block bsSize="large" onClick={() => this.props.saveTeams(this.state.team1, this.state.team2)}>Battle</Button>
+                </Row>
+            </Grid>
         )
 
     }
     
+}
+
+function SpellDropdown(props){
+    const {selected, onSelect} = props;
+    return (
+        <DropdownButton title="Add Spell">
+            {spells.map(spell => <MenuItem onClick={() => onSelect(spell)}>{spell.name}</MenuItem>)}
+        </DropdownButton>
+    )
+}
+
+function RelicDropdown(props){
+    const {selected, onSelect} = props;
+    return (
+        <DropdownButton title="Add Relic">
+            {relics.map(relic => <MenuItem onClick={() => onSelect(relic)}>{relic.name}</MenuItem>)}
+        </DropdownButton>
+    )
 }

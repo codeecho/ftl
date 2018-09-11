@@ -5,3 +5,19 @@ body{
     color:white;
     font-family:'Source Code Pro';
 }
+
+input, select{
+    color:black;
+}
+
+.attacker{
+    border:1px solid blue;
+}
+
+.target{
+    border:1px solid yellow;
+}
+
+.ko{
+    border:1px solid red;
+}
