@@ -1,22 +1,4 @@
-class Status{
-    
-    constructor(id, name, description){
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
-    
-}
-
-class ModifierStatus extends Status{
-    
-    constructor(id, name, description, property){
-        super(id, name, description);
-        this.type = 'modifier';
-        this.property = property;
-    }
-    
-}
+import Status, {ModifierStatus} from '../../models/Status';
 
 export const speedUp = new ModifierStatus('speedUp', 'Speed Up', 'Speed has increased', 'speed');
 export const speedDown = new ModifierStatus('speedDown', 'Speed Down', 'Speed has descreased', 'speed');

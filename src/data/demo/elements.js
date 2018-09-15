@@ -1,18 +1,4 @@
-class Element{
-    constructor(id, name, weakness){
-        this.id;
-        this.name = name;
-        this.weakness = weakness;
-    }
-    
-    isWeakAgainst(element){
-        return element && this.weakness === element.id;
-    }
-    
-    isEffectiveAgainst(element){
-        return element && element.isWeakAgainst(this);
-    }
-}
+import Element from '../../models/Element';
 
 export const fire = new Element('fire', 'Fire', 'water');
 export const water = new Element('water', 'Water', 'lightning');

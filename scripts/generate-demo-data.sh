@@ -1,0 +1,1 @@
+node generate-demo-data.js && mv test.json ../src/data/

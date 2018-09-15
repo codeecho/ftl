@@ -1,21 +1,4 @@
-class Relic{
-    
-    constructor(type, name){
-        this.type = type;
-        this.name = name;
-    }
-    
-}
-
-class ModifierRelic extends Relic{
-    
-    constructor(name, property, modifier){
-        super('modifier', name);
-        this.property = property;
-        this.modifier = modifier;
-    }
-    
-}
+import Relic, {ModifierRelic} from '../../models/Relic';
 
 const speedStone = new ModifierRelic('Speed Stone', 'speed', 1.5);
 const heroStone = new ModifierRelic('Hero Stone', 'attack', 1.5);
