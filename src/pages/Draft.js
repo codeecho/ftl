@@ -9,7 +9,7 @@ export default function Draft(props){
     const {year, players} = props;
     
     return (
-        <PageWrapper title={year + ' Draft'}>
+        <PageWrapper icon="list-alt" title={year + ' Draft'}>
             <div>
                 <PlayerTable players={players} defaultSortProperty="potential"/>
             </div>

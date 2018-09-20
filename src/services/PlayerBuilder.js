@@ -5,8 +5,6 @@ import PlayerService from './PlayerService';
 
 import {UNDRAFTED_TEAM_ID} from '../constants';
 
-const positions = ['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F', 'GF', 'FC']
-
 export default class PlayerBuilder{
     
     constructor(randomizer){
@@ -26,11 +24,13 @@ export default class PlayerBuilder{
         const age = this.randomizer.getRandomInteger(19, 22);
         const dob = year - age - 1;
         
-        const attack = 100;
-        const defense = 100;   
-        const magicAttack = 100;
-        const magicDefense = 100;
-        const speed = 50;
+        const attack = this.randomizer.getRandomInteger(30, 80);
+        const defense = this.randomizer.getRandomInteger(30, 80);   
+        const magicAttack = this.randomizer.getRandomInteger(30, 80);
+        const magicDefense = this.randomizer.getRandomInteger(30, 80);
+        const speed = this.randomizer.getRandomInteger(20, 60);
+        const ability = Math.round((attack + defense + magicAttack + magicDefense + speed) / 5);
+        const potential = this.randomizer.getRandomInteger(ability, 90);
         
         const player = {
             id,
@@ -45,7 +45,9 @@ export default class PlayerBuilder{
             magicDefense,
             speed,
             salary: 2.5,
-            draftYear: year
+            draftYear: year,
+            ability,
+            potential
         }
         
         const expectedSalary = this.playerService.calculateExpectedSalary(player);

@@ -8,21 +8,29 @@ import CheckBox from './CheckBox';
 import {GAME_STATE_CONTRACT_NEGOTIATIONS} from '../constants';
 
 export default function PlayerTable(props){
-    const {players, onSelect, year, stage, defaultSortProperty = 'ability'} = props;
+    const {players, onSelect, year, stage, defaultSortProperty = 'ability', hideContract = false, hideStats = false} = props;
     let headings = onSelect ? [{label: ''}] : []
     headings = headings.concat([
         {label: 'Name'},
         {label: 'Age'},        
-        {label: 'Attack', property: 'attack'},        
-        {label: 'Defense', property: 'defense'},
-        {label: 'Speed', property: 'speed'},
-        {label: 'Magic Attack', property: 'magicAttack'},
-        {label: 'Magic Defense', property: 'magicDefense'},
-        {label: 'Overall', property: 'ability'},
-        {label: 'Contract'}
     ]);
+
+    if(!hideStats) headings = headings.concat([
+        {label: 'ATK', property: 'attack'},        
+        {label: 'DEF', property: 'defense'},
+        {label: 'SPD', property: 'speed'},
+        {label: 'SPT', property: 'magicAttack'},
+        {label: 'BAR', property: 'magicDefense'}
+    ]);
+    
+    headings = headings.concat([
+        {label: 'OVR', property: 'ability'},
+        {label: 'POT', property: 'potential'}
+    ]);
+    
+    if(!hideContract) headings = headings.concat({label: 'Contract'});
     return (
-        <div className="scrolling-table">
+        <div className="scrolling-table player-table">
             <div className="scrolling-table-inner">
                 <SortableTable limit={props.limit} defaultSortProperty={defaultSortProperty} data={players} headings={headings} renderRow={(player => <PlayerRow player={player} {...props} />)} />
             </div>
@@ -31,8 +39,8 @@ export default function PlayerTable(props){
 }
 
 function PlayerRow(props){
-    const {player, onSelect, selectIcon = 'arrow-left', selectButtonStyle = "default", year, stage} = props;
-    const {id, name, age, salary, contractExpiry, teamId, expectedSalary, attack, defense, speed, magicAttack, magicDefense, ability} = player;
+    const {player, onSelect, selectIcon = 'arrow-left', selectButtonStyle = "default", year, stage, hideContract = false, hideStats = false} = props;
+    const {id, name, age, salary, contractExpiry, teamId, expectedSalary, attack, defense, speed, magicAttack, magicDefense, ability, potential} = player;
     const isContractExpiring = stage === GAME_STATE_CONTRACT_NEGOTIATIONS && contractExpiry === year;
     const playerHref = `#/player/${id}`;
     const classes = isContractExpiring ? 'info' : '';
@@ -43,15 +51,16 @@ function PlayerRow(props){
                 <a href={playerHref} className="nowrap">{name}</a>
             </td>
             <td>{age}</td>
-            <td>{attack}</td>
-            <td>{defense}</td>
-            <td>{speed}</td>            
-            <td>{magicAttack}</td>            
-            <td>{magicDefense}</td>
-            <td>{ability}</td>            
-            {teamId && !isContractExpiring && <td><span className="nowrap">${salary}M until {contractExpiry}</span></td>}
-            {teamId && isContractExpiring && <td><span className="nowrap">expects ${expectedSalary}M for 3 years</span></td>}            
-            {!teamId && <td><span className="nowrap">expects ${expectedSalary}M for 3 years</span></td>}
+            {!hideStats && <td>{attack}</td>}
+            {!hideStats && <td>{defense}</td>}
+            {!hideStats && <td>{speed}</td>}
+            {!hideStats && <td>{magicAttack}</td>}
+            {!hideStats && <td>{magicDefense}</td>}
+            <td>{ability}</td>           
+            <td>{potential}</td>                        
+            {!hideContract && teamId && !isContractExpiring && <td><span className="nowrap">${salary}M {contractExpiry}</span></td>}
+            {!hideContract && teamId && isContractExpiring && <td><span className="nowrap">expects ${expectedSalary}M for 3 years</span></td>}            
+            {!hideContract && !teamId && <td><span className="nowrap">expects ${expectedSalary}M for 3 years</span></td>}
         </tr>
     )
 }

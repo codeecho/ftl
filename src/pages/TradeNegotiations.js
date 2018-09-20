@@ -278,7 +278,7 @@ export default class TradingNegotiations extends Component{
         const tradeAllowed = selectedUserPlayers.concat(selectedUserDraftPicks).length > 0 && selectedCPUPlayers.concat(selectedCPUDraftPicks).length > 0 && userPayrollAfterTrade <= salaryCap && cpuPayrollAfterTrade <= salaryCap;    
         
         return (
-            <PageWrapper id="trade-page" title="Trading Block" tabs={tradeTabs} selectedTab={TRADE_TAB_ID}>
+            <PageWrapper icon="transfer" id="trade-page" title="Trading Block" tabs={tradeTabs} selectedTab={TRADE_TAB_ID}>
                 {!canTrade && <div>The trade deadline has passed</div>}
                 {canTrade && <div><Row>
                     <Col md={6}>

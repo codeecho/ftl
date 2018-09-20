@@ -172,82 +172,96 @@ export default class BattleField extends Component{
         const delta = isTarget && event.damage;
         const {showStats} = this.state;
         return (
-            <div className={`${!alive && 'ko'} ` + `${isAttacker && 'attacker'} ` + `${isTarget && 'target'} `}>
-                <Table>
-                    <tbody>
-                        <tr>
-                            <th>Name</th>
-                            <td>{name}</td>
-                        </tr>
-                        <tr>
-                            <td>Health</td>
-                            <td>{health}/{maxHealth} (-{delta})</td>
-                        </tr>
-                        <tr>
-                            <td>Status</td>
-                            <td>{!alive ? 'Knocked Out' : statuses.map(s => s.name).join(', ')}</td>
-                        </tr>
-                        <tr>
-                            <td>MP</td>
-                            <td>{magicPoints}/{maxMagicPoints}</td>
-                        </tr>
-                        <tr>
-                            <td>Wait</td>
-                            <td>
-                                <div style={{border:'1px solid white'}}>
-                                    <div style={{backgroundColor:'white', height: 20, width: wait + '%'}}> </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                    {showStats && <tbody>
-                        <tr>
-                            <td>Element</td>
-                            <td>{element && element.name}</td>
-                        </tr>
-                        <tr>
-                            <td>Weapon Element</td>
-                            <td>{weapon.element && weapon.element.name}</td>
-                        </tr>
-                        <tr>
-                            <td>Armour Element</td>
-                            <td>{armour.element && armour.element.name}</td>
-                        </tr>
-                        <tr>
-                            <td>Attack</td>
-                            <td>{attack} ({realAttack})</td>
-                        </tr>
-                        <tr>
-                            <td>Defense</td>
-                            <td>{defense} ({realDefense})</td>
-                        </tr>
-                        
-                        <tr>
-                            <td>Magic Attack</td>
-                            <td>{magicAttack} ({realMagicAttack})</td>
-                        </tr>
-                        <tr>
-                            <td>Magic Defense</td>
-                            <td>{magicDefense} ({realMagicDefense})</td>
-                        </tr>
-                        <tr>
-                            <td>Speed</td>
-                            <td>{speed} ({realSpeed})</td>
-                        </tr>
-                        <tr>
-                            <td>Spells</td>
-                            <td>
-                                {spells.map(spell => <div>{spell.name}</div>)}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Relics</td>
-                            <td>
-                                {relics.map(relic => <div>{relic.name}</div>)}
-                            </td>
-                        </tr>
-                    </tbody>}
-                </Table>
+            <div>
+                <div className="character-card">
+                    <div className="character-image">
+                        <img src="https://avatarfiles.alphacoders.com/548/5485.jpg"/>
+                    </div>
+                    <div className="character-details">
+                        <div className="character-name">{name}</div>
+                        <div className="character-stats">
+                            <div className="character-hp">{health}/{maxHealth}</div>
+                            <div className="character-mp">{magicPoints}/{maxMagicPoints}</div>                        
+                        </div>
+                    </div>
+                </div>
+                <div className={`${!alive && 'ko'} ` + `${isAttacker && 'attacker'} ` + `${isTarget && 'target'} `}>
+                    <Table>
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <td>{name}</td>
+                            </tr>
+                            <tr>
+                                <td>Health</td>
+                                <td>{health}/{maxHealth} (-{delta})</td>
+                            </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td>{!alive ? 'Knocked Out' : statuses.map(s => s.name).join(', ')}</td>
+                            </tr>
+                            <tr>
+                                <td>MP</td>
+                                <td>{magicPoints}/{maxMagicPoints}</td>
+                            </tr>
+                            <tr>
+                                <td>Wait</td>
+                                <td>
+                                    <div style={{border:'1px solid white'}}>
+                                        <div style={{backgroundColor:'white', height: 20, width: wait + '%'}}> </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        {showStats && <tbody>
+                            <tr>
+                                <td>Element</td>
+                                <td>{element && element.name}</td>
+                            </tr>
+                            <tr>
+                                <td>Weapon Element</td>
+                                <td>{weapon.element && weapon.element.name}</td>
+                            </tr>
+                            <tr>
+                                <td>Armour Element</td>
+                                <td>{armour.element && armour.element.name}</td>
+                            </tr>
+                            <tr>
+                                <td>Attack</td>
+                                <td>{attack} ({realAttack})</td>
+                            </tr>
+                            <tr>
+                                <td>Defense</td>
+                                <td>{defense} ({realDefense})</td>
+                            </tr>
+                            
+                            <tr>
+                                <td>Magic Attack</td>
+                                <td>{magicAttack} ({realMagicAttack})</td>
+                            </tr>
+                            <tr>
+                                <td>Magic Defense</td>
+                                <td>{magicDefense} ({realMagicDefense})</td>
+                            </tr>
+                            <tr>
+                                <td>Speed</td>
+                                <td>{speed} ({realSpeed})</td>
+                            </tr>
+                            <tr>
+                                <td>Spells</td>
+                                <td>
+                                    {spells.map(spell => <div>{spell.name}</div>)}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Relics</td>
+                                <td>
+                                    {relics.map(relic => <div>{relic.name}</div>)}
+                                </td>
+                            </tr>
+                        </tbody>}
+                    </Table>
+                </div>
             </div>
         );
     }

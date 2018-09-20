@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import Team from '../pages/Team';
 import TeamService from '../services/TeamService';
+import {addStarter, removeStarter} from '../actions';
 
 const teamService = new TeamService();
 
@@ -18,9 +19,20 @@ const mapStateToProps = (state, ownProps) => {
         return Object.assign({}, player, {ratings});
     });
   
-  const lineup = teamService.getLineup(players);
+  let starters, secondUnit, reserves = undefined;
   
-  const lineupRatings = teamService.getLineupRatings(lineup);
+  if(state.gameState.teamId === teamId){
+      starters = players.filter(player => state.gameState.starters.includes(player.id));
+      secondUnit = [];
+      reserves = players.filter(player => !state.gameState.starters.includes(player.id));
+  }else{
+    const lineup = teamService.getLineup(players);      
+    starters = lineup.starters;
+    secondUnit = lineup.secondUnit;
+    reserves = lineup.reserves;
+  }
+  
+  //const lineupRatings = teamService.getLineupRatings(lineup);
   
   const fixtures = state.fixtures.map(round => round.find(fixture => fixture.homeId === teamId || fixture.awayId === teamId)).filter(fixture => !!fixture);
   
@@ -30,19 +42,26 @@ const mapStateToProps = (state, ownProps) => {
     const awayTeam = state.teams.find(team => team.id === awayId);    
     return Object.assign({}, fixture, {homeTeam, awayTeam});
   });
+  
+  const isPlayerTeam = team.id === state.gameState.teamId;
 
   return {
     tab,
     team,
     players,
-    ...lineup,
+    starters,
+    secondUnit,
+    reserves,
     fixtures: decoratedFixtures,
-    lineupRatings
+    isPlayerTeam
+    //lineupRatings
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
+      addStarter: player => dispatch(addStarter(player.id)),
+      removeStarter: player => dispatch(removeStarter(player.id))      
   };
 };
 

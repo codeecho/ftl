@@ -70,7 +70,7 @@ export default class TradingBlock extends Component{
         const {userPlayers, teams} = this.props;
     
         return (
-            <PageWrapper title="Trading Block" tabs={tradeTabs} selectedTab={TRADING_BLOCK_TAB_ID}>
+            <PageWrapper icon="transfer" title="Trading Block" tabs={tradeTabs} selectedTab={TRADING_BLOCK_TAB_ID}>
                 <Row>
                     <Col xs={12}>
                         <PlayerTable players={this.state.selectedPlayers} onSelect={this.deselectPlayer} selectButtonStyle="danger" selectIcon="minus"/>

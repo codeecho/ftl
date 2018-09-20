@@ -1,16 +1,23 @@
 export const GOD_MODE_TAB_ID = 'god';
 
+export const LINEUP_TAB_ID = 'lineup';
 export const FIXTURES_TAB_ID = 'fixtures';
 export const STATS_TAB_ID = 'stats';
 export const DRAFT_PICKS_TAB_ID = 'draft-picks';
 
-export function getTeamTabs(team){
-    return [
-        { id: undefined, label: 'Ratings', target: `#/team/${team.id}`},
-//        { id: STATS_TAB_ID, label: 'Stats', target: `#/team/${team.id}/${STATS_TAB_ID}`},
+export function getTeamTabs(team, isPlayerTeam){
+    let tabs = [{ id: undefined, label: 'Squad', target: `#/team/${team.id}`, icon: 'http://icons.iconarchive.com/icons/icojam/blue-bits/128/shield-icon.png'}]
+    
+    if(isPlayerTeam){
+        tabs = tabs.concat({ id: LINEUP_TAB_ID, label: 'Lineup', target: `#/team/${team.id}/${LINEUP_TAB_ID}`});
+    }
+    
+    tabs = tabs.concat([
+    //        { id: STATS_TAB_ID, label: 'Stats', target: `#/team/${team.id}/${STATS_TAB_ID}`},
         { id: FIXTURES_TAB_ID, label: 'Fixtures', target: `#/team/${team.id}/${FIXTURES_TAB_ID}`},
-        { id: DRAFT_PICKS_TAB_ID, label: 'Draft Picks', target: `#/team/${team.id}/${DRAFT_PICKS_TAB_ID}`}        
-    ];
+        { id: DRAFT_PICKS_TAB_ID, label: 'Draft Picks', target: `#/team/${team.id}/${DRAFT_PICKS_TAB_ID}`}   
+    ])
+    return tabs;
 }
 
 export function getPlayerTabs(player){
@@ -37,7 +44,7 @@ export const TRADE_TAB_ID = 'trade';
 
 export const tradeTabs = [
     //{id: TRADING_BLOCK_TAB_ID, label: 'Request Proposals', target: '#/tradingBlock'},
-    {id: TRADE_TAB_ID, label: 'Make a Trade', target: '#/trade'}
+    //{id: TRADE_TAB_ID, label: 'Make a Trade', target: '#/trade'}
 ];
 
 

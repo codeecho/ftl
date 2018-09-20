@@ -11,30 +11,14 @@ export default function Lineup(props){
     return (
         <div>
             <Row>
-                <Col md={6}>
-                    <Table condensed>
-                        <tbody>
-                            <tr>
-                                <th>Payroll</th>
-                                <td>${team.payroll}M</td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                </Col>
-            </Row>
-            <Row>
-                <div>
+                <Col xs={12}>
                     <h3>Starters</h3>
-                    <PlayerTable players={starters} />
-                </div>
-                <div>
-                    <h3>Second Unit</h3>
-                    <PlayerTable players={secondUnit} />
-                </div>
-                <div>
+                    <PlayerTable players={starters} onSelect={props.removeStarter} selectButtonStyle="danger" selectIcon="minus"/>
+                </Col>
+                <Col xs={12}>
                     <h3>Reserves</h3>
-                    <PlayerTable players={reserves} />
-                </div>
+                    <PlayerTable players={secondUnit.concat(reserves)} onSelect={props.addStarter} selectButtonStyle="success" selectIcon="plus"/>
+                </Col>
             </Row>
         </div>
     );

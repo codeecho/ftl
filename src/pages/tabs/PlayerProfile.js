@@ -53,7 +53,7 @@ export default class PlayerProfice extends Component{
     
         const {isContractExpiring, isFreeAgent, player, team, signFreeAgent, extendContract, isUserPlayer, playerRatings} = this.props;
         
-        const {name, age, ability, salary, contractExpiry, expectedSalary, attack, defense, magicAttack, magicDefense, speed} = player;    
+        const {name, age, ability, potential, salary, contractExpiry, expectedSalary, attack, defense, magicAttack, magicDefense, speed} = player;    
         
         const {games, ppg, apg, rpg} = playerRatings;
         
@@ -105,6 +105,10 @@ export default class PlayerProfice extends Component{
                             <tr class="info">
                                 <th>Overall</th>
                                 <td>{ability}</td>
+                            </tr>
+                            <tr class="success">
+                                <th>Potential</th>
+                                <td>{potential}</td>
                             </tr>
                         </tbody>
                     </Table>

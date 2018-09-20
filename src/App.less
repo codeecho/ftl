@@ -49,11 +49,11 @@ body {
 }
 .main-content {
   margin: 0px;
-  margin-left: 50px;
+  //margin-left: 50px;
   padding-top: 20px;
   padding-bottom: 20px;
-  padding-left: 50px;
-  padding-right: 50px;
+  //padding-left: 50px;
+  //padding-right: 50px;
 }
 .sidebar {
   border: none;
@@ -63,12 +63,12 @@ body {
   background: linear-gradient(#5bc0de, #0a2730);
 }
 .header {
-  margin-left: 50px;
-  border: none;
-  background: -webkit-gradient(linear, left top, left bottom, from(#5bc0de), to(#2390b0));
-  background: -webkit-linear-gradient(#5bc0de, #2390b0);
-  background: -o-linear-gradient(#5bc0de, #2390b0);
-  background: linear-gradient(#5bc0de, #2390b0);
+  //margin-left: 50px;
+//  border: none;
+//  background: -webkit-gradient(linear, left top, left bottom, from(#5bc0de), to(#2390b0));
+//  background: -webkit-linear-gradient(#5bc0de, #2390b0);
+//  background: -o-linear-gradient(#5bc0de, #2390b0);
+//  background: linear-gradient(#5bc0de, #2390b0);
 }
 .sidebar a {
   border: none!important;
@@ -92,7 +92,7 @@ body {
   margin-bottom: 10px;
 }
 .tabs a {
-  width: 120px;
+  width: 100px;
   display: inline-block;
   text-align: center;
   cursor: pointer;
@@ -124,6 +124,11 @@ body {
   font-size: 2em;
   color: white!important;
 }
+
+.glyphicon-chevron-down{
+    display:none;
+}
+
 .history-button {
   margin-right: 20px;
   cursor: pointer;
@@ -131,6 +136,75 @@ body {
 .button-row td {
   vertical-align: middle!important;
 }
+.navbar-brand{
+    font-size:1.4em;
+    margin:0px;
+    text-transform:uppercase;
+}
+
+.header-button{
+    margin-right:20px;
+    cursor:pointer;
+}
+
+.tabs-button{
+    float:right;
+    margin-right:0px;
+}
+
+.game-menu{
+    margin-bottom:-20px;
+}
+
+.game-menu img{
+    height:70px;
+}
+
+.game-menu .btn{
+    margin-bottom:20px;
+}
+
+td.min {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.progress-bar{
+    text-align: left;
+    padding-left:10px;
+}
+
+.player-card{
+    border-radius:20px;
+    margin-bottom:10px;
+}
+
+.player-card-image img{
+    height:198px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+
+.player-card-details{
+    padding-right:30px;
+    padding-left:30px;
+}
+
+.player-card td{
+    padding:0px!important;
+    border:none!important;
+}
+
+.player-card .progress{
+    margin:1px;
+}
+
+.player-table button{
+    padding-top:0px;
+    padding-bottom:0px;
+}
+
 @media only screen and (min-width: 768px) {
   .sidebar .container-fluid {
     padding: 0px;
@@ -138,4 +212,8 @@ body {
   .continue-wrapper a {
     margin-top: 20px!important;
   }
+}
+
+@media only screen and (max-width: 767px) {
+ 
 }

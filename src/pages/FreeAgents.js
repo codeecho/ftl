@@ -9,7 +9,7 @@ export default function FreeAgents(props){
     const {players} = props;
     
     return (
-        <PageWrapper title="Free Agents">
+        <PageWrapper icon="pencil" title="Free Agents">
             <div>
                 <PlayerTable players={players} />
             </div>

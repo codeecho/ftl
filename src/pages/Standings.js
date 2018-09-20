@@ -45,7 +45,7 @@ export default function Home(props){
     }
     
     return (
-        <PageWrapper title="Standings" tabs={standingsTabs} selectedTab={tab}>
+        <PageWrapper icon="list" title="Standings" tabs={standingsTabs} selectedTab={tab}>
             {getActiveTab()}
         </PageWrapper>
     );

@@ -29,6 +29,9 @@ export const RELEASE_PLAYER = 'RELEASE_PLAYER';
 export const SET_TRADE_PROPOSAL = 'SET_TRADE_PROPOSAL';
 export const COMPLETE_TRADE = 'COMPLETE_TRADE';
 
+export const ADD_STARTER = 'ADD_STARTER';
+export const REMOVE_STARTER = 'REMOVE_STARTER';
+
 export const SAVE_RESULTS = 'SAVE_RESULTS';
 
 export const HOST_ONLINE_GAME = 'HOST_ONLINE_GAME';
@@ -126,6 +129,14 @@ export function completeTrade(trade){
 }
 export function releasePlayer(playerId){
     return { type: RELEASE_PLAYER, playerId };
+}
+
+export function addStarter(playerId){
+    return { type: ADD_STARTER, playerId };
+}
+
+export function removeStarter(playerId){
+    return { type: REMOVE_STARTER, playerId };
 }
 
 export function saveResults(results){

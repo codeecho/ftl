@@ -13,7 +13,7 @@ export default class Player extends Component{
     render(){
         
         return (
-            <PageWrapper title="Settings">
+            <PageWrapper icon="cog" title="Settings">
                 <div>
                     {false && <div><Button bsSize="large" bsStyle="primary" block onClick={this.props.hostOnlineGame}>Host Online Game</Button>
                     <Button bsSize="large" bsStyle="primary" block onClick={this.props.joinOnlineGame}>Join Online Game</Button>                    

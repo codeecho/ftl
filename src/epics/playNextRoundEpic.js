@@ -51,7 +51,7 @@ export const playNextRoundEpic = (action$, store) =>
                 const homePlayers = stateSelector.getTeamPlayers(state, homeId);
                 const awayPlayers = stateSelector.getTeamPlayers(state, awayId);            
                 
-                const result = getResult(randomizer, homeTeam, awayTeam, homePlayers, awayPlayers);
+                const result = getResult(gameState, randomizer, homeTeam, awayTeam, homePlayers, awayPlayers);
                 
                 const {winner, loser, homeScore, awayScore, homePlayerRatings, awayPlayerRatings} = result;
                 
@@ -110,8 +110,8 @@ export const playNextRoundEpic = (action$, store) =>
         return Observable.of(actions.saveResults(results));
     });
     
-function getResult(randomizer, homeTeam, awayTeam, homePlayers, awayPlayers){
-    const battle = new Battle(getTeamForBattle(homeTeam, homePlayers), getTeamForBattle(awayTeam, awayPlayers));
+function getResult(gameState, randomizer, homeTeam, awayTeam, homePlayers, awayPlayers){
+    const battle = new Battle(getTeamForBattle(gameState, homeTeam, homePlayers), getTeamForBattle(gameState, awayTeam, awayPlayers));
     battle.execute();
     const state = battle.getState();
     
@@ -131,11 +131,14 @@ function getResult(randomizer, homeTeam, awayTeam, homePlayers, awayPlayers){
     };
 }
 
-function getTeamForBattle(team, players){
+function getTeamForBattle(gameState, team, players){
+    
+    const starters = gameState.teamId === team.id && gameState.starters.length === 5 ? players.filter(player => gameState.starters.includes(player.id)) : teamService.getLineup(players).starters;
+    
     return {
         id: team.id,
         name: team.name,
-        players: players.map(player => {
+        players: starters.map(player => {
             return {
                 id: player.id,
                 name: player.name,

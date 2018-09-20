@@ -12,7 +12,8 @@ export default class ModalWrapper extends Component{
         this.state = {
             show: false,
             title: '',
-            body: ''
+            body: '',
+            hideClose: false
         }
         
         this.close = this.close.bind(this);
@@ -21,7 +22,8 @@ export default class ModalWrapper extends Component{
             this.setState({
                 title: event.title,
                 body: event.body,
-                show: true
+                show: true,
+                hideClose: event.hideClose
             });
         });
     }
@@ -39,9 +41,9 @@ export default class ModalWrapper extends Component{
     			<Modal.Body>
     				{React.cloneElement(this.state.body, {closeModal: this.close})}
     			</Modal.Body>
-    			<Modal.Footer>
+    			{!this.state.hideClose && <Modal.Footer>
     				<Button bsSize="large" block bsStyle="primary" onClick={this.close}>Close</Button>
-    			</Modal.Footer>
+    			</Modal.Footer>}
     		</Modal>
     	);
     }

@@ -1,7 +1,5 @@
 const fs = require('fs');
 
-const sourceData = require('./2017-18.NBA.Roster.json');
-
 const firstNames = require('../src/data/first-names.json');
 const surnames = require('../src/data/surnames.json');
 
@@ -25,7 +23,7 @@ function getRandomName(){
     let n2 = Math.round(Math.random() * surnames.length);
     const firstName = firstNames[n1];
     const surname = surnames[n2];
-    const name = firstName + " " + surname;
+    const name = firstName;
     return name;
 }
 
@@ -48,6 +46,7 @@ function createPlayer(id, teamId){
     const magicDefense = getRandomInteger(30, 80);
     const speed = getRandomInteger(20, 60);
     const ability = Math.round((attack + defense + magicAttack + magicDefense + speed) / 5);
+    const potential = getRandomInteger(ability, 90);
     
     const player = {
         id,
@@ -60,7 +59,8 @@ function createPlayer(id, teamId){
         magicAttack,
         magicDefense,
         speed,
-        ability
+        ability,
+        potential
     }
     
     return player;
@@ -87,6 +87,7 @@ function generateDataFile(){
     
     for(let i=0; i<20; i++){
         const player = createPlayer(players.length, -1);
+        player.contractExpiry = year;
         players.push(player);
     }
     

@@ -100,7 +100,7 @@ export default class GameSetupReducer{
     
     setTeam(action, state){
         const {teamId, username} = action;
-        const gameState = Object.assign({}, state.gameState, { teamId });
+        const gameState = Object.assign({}, state.gameState, { teamId, starters: [] });
         const randomizer = new Randomizer();
         const userId = randomizer.getRandomString(10);
         const user = Object.assign({}, state.user, {id: userId, name: username})
