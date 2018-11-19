@@ -11,6 +11,8 @@ export const LOAD_GAME_DATA = 'LOAD_GAME_DATA';
 export const SET_TEAM = 'SET_TEAM';
 export const NEW_GAME = 'NEW_GAME';
 
+export const SET_STAGE = 'SET_STAGE';
+
 export const ADVANCE = 'ADVANCE';
 export const PLAY_NEXT_ROUND = 'PLAY_NEXT_ROUND';
 export const DO_DRAFT = 'DO_DRAFT';
@@ -23,15 +25,17 @@ export const CREATE_NEXT_PLAYOFF_ROUND = 'CREATE_NEXT_PLAYOFF_ROUND';
 export const END_PLAYOFFS = 'END_PLAYOFFS';
 export const END_SEASON = 'END_SEASON';
 
+export const SIMULATE_SEASON = 'SIMULATE_SEASON';
+
 export const SIGN_FREE_AGENT = 'SIGN_FREE_AGENT';
 export const EXTEND_CONTRACT = 'EXTEND_CONTRACT';
 export const RELEASE_PLAYER = 'RELEASE_PLAYER';
 export const SET_TRADE_PROPOSAL = 'SET_TRADE_PROPOSAL';
 export const COMPLETE_TRADE = 'COMPLETE_TRADE';
 
-export const ADD_STARTER = 'ADD_STARTER';
-export const REMOVE_STARTER = 'REMOVE_STARTER';
+export const SET_STARTERS = 'SET_STARTERS';
 
+export const SAVE_RESULT = 'SAVE_RESULT';
 export const SAVE_RESULTS = 'SAVE_RESULTS';
 
 export const HOST_ONLINE_GAME = 'HOST_ONLINE_GAME';
@@ -81,6 +85,10 @@ export function newGame(){
     return { type: NEW_GAME };
 }
 
+export function setStage(stage){
+    return { type: SET_STAGE, stage };
+}
+
 export function advance(numberOfRounds, playThroughPlayoffs, seed){
     return { type: ADVANCE, numberOfRounds, playThroughPlayoffs, seed };
 }
@@ -90,8 +98,8 @@ export function playNextRound(numberOfRounds, playThroughPlayoffs, seed){
 export function doDraft(seed){
     return { type: DO_DRAFT, seed };
 }
-export function applyTraining(seed){
-    return { type: APPLY_TRAINING, seed };
+export function applyTraining(updates, seed){
+    return { type: APPLY_TRAINING, updates, seed };
 }
 export function handleExpiringContracts(seed){
     return { type: HANDLE_EXPIRING_CONTRACTS, seed};
@@ -115,6 +123,10 @@ export function endSeason(seed){
     return { type: END_SEASON, seed };
 }
 
+export function simulateSeason(){
+    return { type: SIMULATE_SEASON };
+}
+
 export function signFreeAgent(playerId){
     return { type: SIGN_FREE_AGENT, playerId };
 }
@@ -131,14 +143,13 @@ export function releasePlayer(playerId){
     return { type: RELEASE_PLAYER, playerId };
 }
 
-export function addStarter(playerId){
-    return { type: ADD_STARTER, playerId };
+export function setStarters(starters){
+    return { type: SET_STARTERS, starters };
 }
 
-export function removeStarter(playerId){
-    return { type: REMOVE_STARTER, playerId };
+export function saveResult(result){
+    return { type: SAVE_RESULT, result };
 }
-
 export function saveResults(results){
     return { type: SAVE_RESULTS, results };
 }

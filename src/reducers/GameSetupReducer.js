@@ -36,7 +36,7 @@ export default class GameSetupReducer{
         const hasDraft = data.players.filter(player => player.teamId === -2 && player.draftYear === year).length > 0
         
         if(!hasDraft){
-            const draft = draftService.createDraftClass(year, data.nextPlayerId, data.teams.length*2);
+            const draft = draftService.createDraftClass(year, data.nextPlayerId, data.teams.length);
             nextPlayerId = nextPlayerId + draft.length;
             players = players.concat(draft);
         }

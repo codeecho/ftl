@@ -2,6 +2,8 @@ import PlayerService from './PlayerService';
 
 import {numberArray} from '../utils/utils';
 
+import {DRAFT_PICKS_PER_TEAM} from '../constants';
+
 export default class TeamService{
     
     constructor(){
@@ -14,6 +16,16 @@ export default class TeamService{
         return payroll;
     }
     
+    getStarters(players){
+        players.sort((a,b) => b.ability - a.ability);
+        return players.slice(0, 5).map((player, i) => {
+            return {
+                player,
+                row: i < 2 ? 'back' : 'front'
+            };
+        });
+    }
+    
     getLineup(players){
         players = players.concat();
         
@@ -23,22 +35,14 @@ export default class TeamService{
             reserves: []
         };
         
-        if(players.length <= 5) {
-            lineup.starters = players;
-            return lineup;
-        }
+        lineup.starters = this.getStarters(players);
         
-        players.sort((a,b) => b.ability - a.ability);
+        players = players.filter(player => !lineup.starters.map(x => x.player).includes(player));
         
-        lineup.starters = players.splice(0, 5);
         
-        if(players.length <= 5) {
-            lineup.secondUnit = players;
-            return lineup;
-        }
+        lineup.secondUnit = this.getStarters(players);
         
-        lineup.secondUnit = players.splice(0, 5);
-        lineup.reserves = players;
+        lineup.reserves = players.filter(player => !lineup.secondUnit.map(x => x.player).includes(player));
         
         return lineup;
     }
@@ -112,22 +116,16 @@ export default class TeamService{
       
         numberArray(numberOfYears).forEach(i => {
             const draftYear = fromYear + i;
-            if(!tradedPicks.find(pick => pick.year === draftYear && pick.round === 1)){
-                draftPicks.push({
-                    year: draftYear,
-                    round: 1,
-                    teamId: teamId,
-                    ownerId: teamId
-                });   
-            }
-            if(!tradedPicks.find(pick => pick.year === draftYear && pick.round === 2)){
-                draftPicks.push({
-                    year: draftYear,
-                    round: 2,
-                    teamId: teamId,
-                    ownerId: teamId                    
-                });   
-            }
+            for(let j=1; j<=DRAFT_PICKS_PER_TEAM; j++){
+                if(!tradedPicks.find(pick => pick.year === draftYear && pick.round === j)){
+                    draftPicks.push({
+                        year: draftYear,
+                        round: j,
+                        teamId: teamId,
+                        ownerId: teamId
+                    });   
+                }
+            }            
         });
             
         draftPicks.sort((a, b) => a.year - b.year);
@@ -144,7 +142,3 @@ function getAverageAttributeRating(players, attribute, weights){
     const weightTotal = weights.reduce((total, weight) => total + weight, 0);
     return players.reduce((total, player, i) => total + (player[attribute]*weights[i]), 0) / weightTotal;
 }
-
-
-// WEBPACK FOOTER //
-// src/services/TeamService.js

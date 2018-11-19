@@ -291,7 +291,7 @@ function SpellDropdown(props){
     const {selected, onSelect} = props;
     return (
         <DropdownButton title="Add Spell">
-            {spells.map(spell => <MenuItem onClick={() => onSelect(spell)}>{spell.name}</MenuItem>)}
+            {spells.map(spell => <MenuItem onClick={() => onSelect(spell)}>{spell.name}: {spell.description}</MenuItem>)}
         </DropdownButton>
     )
 }

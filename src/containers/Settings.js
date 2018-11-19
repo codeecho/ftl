@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Settings from '../pages/Settings';
 
-import { hostOnlineGame, joinOnlineGame, newGame } from '../actions';
+import { hostOnlineGame, joinOnlineGame, newGame, simulateSeason } from '../actions';
 
 const mapStateToProps = (state, ownProps) => {
     
@@ -17,7 +17,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     joinOnlineGame: () => {
         const gameId = prompt('Please enter game id: ');
         dispatch(joinOnlineGame(gameId))
-    }
+    },
+    simulateSeason: () => dispatch(simulateSeason())
   };
 };
 

@@ -1,0 +1,176 @@
+const player = {
+  age: 18,
+  prime: 27,
+  baseline: 60,
+  potential: 80,
+  ability: 60
+};
+
+for(let i=1; i<18; i++){
+
+  const age = player.age + i;
+  const {prime, baseline} = player;
+  
+  const diff = potential - baseline;
+
+  const delta = ((-diff/Math.pow(prime-18, 2)) * ((Math.pow(prime-age, 2)))) + diff
+
+  const ability = baseline + delta;
+
+  console.log(age, ability);
+
+}
+
+Atk training boost
+Def training boost
+Spt training boost
+Bar training boost
+Spd training boost
+Learns healing faster
+Learns elemental spells faster
+Learns status spells faster
+Learns physical spells faster
+Learns individual elemental spells faster
+HP Boost
+MP Boost
+Critical Hit boost
+Accuracy boost
+Resistance boost
+Counterattack boost
+
+Warrior ATK 20% boost, DEF 20% Boost, Physical Moves 20% Boost
+Samurai ATK 20% boost, DEF 10% Boost, SPD 10% boost, Physical Moves 20% Boost
+Paladin ATK 20% boost, DEF 10% Boost, SPT 10% boost, Physical Moves 10% Boost, Status Spells 10% Boost
+
+Mage SPT 10% Boost, BAR 30% Boost, Status Spells 20% Boost
+Fairy SPT 10% Boost, BAR 30% Boost, Status Spells 20% Boost
+
+Warlock SPT 10% Boost, BAR 30% Boost, Elemental Spells 20% Boost
+Sorceress SPT 10% Boost, BAR 30% Boost Elemental Spells 20% Boost
+
+Rogue SPD 20% Boost, CounterAttack 20% Boost, Physical Moves 20% Boost
+Ranger SPD 20% Boost, Accuracy 20% Boost, Physical Moves 20% Boost
+Hunter SPD 20% Boost, Critical Hit 20% Boost, Physical Moves 20% Boost
+
+
+Heal
+
+Quick
+Boost
+Shield
+Spirit
+Barrier
+
+Slow
+Weaken - Reduces ATK
+Expose - Reduces DEF
+Curse - SPR down
+Breach - BAR down
+
+Fire
+Water
+Wind
+Earth
+Lightning
+
+Drain - Inflicts damage and recovers HP
+Mystic Flare - Inflicts damage and reduces MP
+Shadow Strike - Inflicts damage and increases BAR
+Energy Surge - Inflicts damage and increases ATK
+Focus - Doubles MP regen
+
+Fire Fist - Fire physical
+Ice Slash - Water physical
+Hurricane Kick - Wind physical
+Rock Smash - Rock physical
+Lightning Slash - Lightning physical
+
+Fists Of Fury - Lowers DEF
+Sonic Uppercut - Lowers SPD
+Tiger Frenzy - Increases SPR
+Dragon Fury - Lowers BAR
+Raging Fist - ATK Boost
+
+Fire shield
+Earth shield
+Wind shield
+Lightning shield
+Water shield
+
+Moves which add element to attacks
+
+
+const games = 38;
+
+const player = {
+  age: 0,
+  prime: 18,
+  baseline: 1,
+  potential: 60,
+  ability: 1,
+  attack: 1,
+  defense: 1,
+  magicAttack: 1,
+  magicDefense: 1,
+  speed: 1
+};
+
+const baseAge = 0;
+
+const xp = 100;
+
+for(let i=1; i<19; i++){
+
+  player.age = player.age + 1;
+
+  console.log(getTrainingDelta(player)*38);
+
+  for(let j=0; j<games; j++){
+    train(player);
+  }
+
+}
+
+console.log(player);
+
+function train(player){
+  const delta = getTrainingDelta(player);
+  const xpSplits = getXPSplits();
+  player.attack = player.attack + ((xpSplits.attack / xp) * delta);
+  player.defense = player.defense + ((xpSplits.defense / xp) * delta);
+  player.magicAttack = player.magicAttack + ((xpSplits.magicAttack / xp) * delta);
+  player.magicDefense = player.magicDefense + ((xpSplits.magicDefense / xp) * delta);
+  player.speed = player.speed + ((xpSplits.speed / xp) * delta);
+}
+
+function getXPSplits(){
+  const r = Math.random();
+  return {
+    attack: 20 * 1.25, 
+    defense: 20 * 0.85,
+    magicAttack: 20 * 1.15,
+    magicDefense: 20 * 0.8,
+    speed: 20 * 0.9
+  };
+}
+
+function getTrainingDelta(player){
+  const {age, prime, baseline, potential} = player;
+  
+  const d1 = getDeltaForYear(age-1, prime, baseline, potential);
+  const d2 = getDeltaForYear(age, prime, baseline, potential);
+
+  const d3 = d2 - d1;
+
+  const d = (d3 / (games)) * 5;
+
+  return d;
+}
+
+function getDeltaForYear(age, prime, baseline, potential){
+  const diff = potential - baseline;
+
+  const delta = (((0-diff)/Math.pow(prime-baseAge, 2)) * ((Math.pow(prime-age, 2)))) + diff
+
+  return delta;
+}

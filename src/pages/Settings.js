@@ -18,6 +18,8 @@ export default class Player extends Component{
                     {false && <div><Button bsSize="large" bsStyle="primary" block onClick={this.props.hostOnlineGame}>Host Online Game</Button>
                     <Button bsSize="large" bsStyle="primary" block onClick={this.props.joinOnlineGame}>Join Online Game</Button>                    
                     <hr/></div>}
+                    <Button bsSize="large" bsStyle="primary" block onClick={this.props.simulateSeason}>Simulate Season</Button>
+                    <hr/>                    
                     <Button bsSize="large" bsStyle="primary" block href="#/load">Load Saved Game</Button>                              
                     <hr/>
                     <Button bsSize="large" bsStyle="primary" block onClick={this.props.newGame}>Start New Game</Button>              

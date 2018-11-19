@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Team from '../pages/Team';
 import TeamService from '../services/TeamService';
-import {addStarter, removeStarter} from '../actions';
+import {setStarters} from '../actions';
 
 const teamService = new TeamService();
 
@@ -19,17 +19,20 @@ const mapStateToProps = (state, ownProps) => {
         return Object.assign({}, player, {ratings});
     });
   
-  let starters, secondUnit, reserves = undefined;
+  let starters, reserves = undefined;
   
   if(state.gameState.teamId === teamId){
-      starters = players.filter(player => state.gameState.starters.includes(player.id));
-      secondUnit = [];
-      reserves = players.filter(player => !state.gameState.starters.includes(player.id));
+      starters = state.gameState.starters.map(starter => {
+          return {
+              player: players.find(player => player.id === starter.playerId),
+              row: starter.row
+          };
+      });
+      reserves = players.filter(player => !state.gameState.starters.map(x => x.playerId).includes(player.id));
   }else{
     const lineup = teamService.getLineup(players);      
     starters = lineup.starters;
-    secondUnit = lineup.secondUnit;
-    reserves = lineup.reserves;
+    reserves = lineup.secondUnit.map(x => x.player).concat(lineup.reserves);
   }
   
   //const lineupRatings = teamService.getLineupRatings(lineup);
@@ -50,7 +53,6 @@ const mapStateToProps = (state, ownProps) => {
     team,
     players,
     starters,
-    secondUnit,
     reserves,
     fixtures: decoratedFixtures,
     isPlayerTeam
@@ -60,8 +62,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-      addStarter: player => dispatch(addStarter(player.id)),
-      removeStarter: player => dispatch(removeStarter(player.id))      
+      setStarters: starters => dispatch(setStarters(starters))
   };
 };
 
@@ -71,7 +72,3 @@ const TeamContainer = connect(
 )(Team);
 
 export default TeamContainer;
-
-
-// WEBPACK FOOTER //
-// src/containers/Team.js

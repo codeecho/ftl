@@ -13,7 +13,7 @@ export default class Player{
         this.weapon = new Weapon('', undefined, 1.2)
         this.armour = new Armour('', undefined, 1.2, 1)    
         this.magicAttack = 100;
-        this.magicDefense = 10;
+        this.magicDefense = 100;
         this.speed = 50;
         this.maxMagicPoints = 100;
         this.magicSpeed = 10;

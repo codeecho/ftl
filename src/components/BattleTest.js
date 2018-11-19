@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import TeamBuilder from './TeamBuilder';
-import Battle from './Battle';
+import BattleSimulator from './BattleSimulator';
 
 import Player from '../models/Player';
 
@@ -21,7 +21,7 @@ const team2 = {
     ]
 }
 
-export default class Index extends Component{
+export default class BattleTest extends Component{
     
     constructor(props){
         super(props);
@@ -47,6 +47,6 @@ export default class Index extends Component{
         
         if(this.state.stage === 'build') return <TeamBuilder team1={this.state.team1} team2={this.state.team2} saveTeams={this.saveTeams} />;
         
-        return <Battle team1={this.state.team1} team2={this.state.team2} buildTeams={() => this.setState({stage: 'build'})} />;
+        return <BattleSimulator debug={true} team1={this.state.team1} team2={this.state.team2} buildTeams={() => this.setState({stage: 'build'})} />;
     }    
 }

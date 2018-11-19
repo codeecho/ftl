@@ -4,6 +4,8 @@ import {Row, Col, Table, Badge, Button, ProgressBar, Glyphicon} from 'react-boot
 
 import PlayerLink from '../../components/PlayerLink';
 
+import {AttackBar, DefenseBar, SpiritBar, BarrierBar, SpeedBar} from '../../components/RatingBars';
+
 export default function Squad(props){
     
     const {players} = props;
@@ -16,7 +18,7 @@ export default function Squad(props){
                         <div className="player-card bg-primary">
                             <Row>
                                 <Col xs={4} className="player-card-image">
-                                    <img src="https://avatarfiles.alphacoders.com/742/74259.jpg" />
+                                    <img src={player.image} />
                                 </Col>
                                 <Col xs={8} className="player-card-details">
                                     <h3>
@@ -33,27 +35,27 @@ export default function Squad(props){
                                             <tbody>
                                                 <tr>
                                                     <td>
-                                                        <ProgressBar label={" ATK: " + player.attack} striped now={player.attack} bsStyle="warning" />
+                                                        <AttackBar value={player.attack} />
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <ProgressBar label={"DEF: " + player.defense} striped now={player.defense} bsStyle="default" />
+                                                        <DefenseBar value={player.defense} />
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <ProgressBar label={"SPT: " + player.magicAttack} striped now={player.magicAttack}  bsStyle="info"/>
+                                                        <SpiritBar value={player.magicAttack} />                                                        
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <ProgressBar label={"BAR: " + player.magicDefense} striped now={player.magicDefense} bsStyle="danger" />
+                                                        <BarrierBar value={player.magicDefense} />                                                        
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <ProgressBar label={"SPD: " + player.speed} striped now={player.speed} bsStyle="success" />
+                                                        <SpeedBar value={player.speed} />                                                        
                                                     </td>
                                                 </tr>
                                             </tbody>

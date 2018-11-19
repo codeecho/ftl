@@ -1,5 +1,5 @@
 import {START, END, WAIT, ATTACK, INPUT, MAGIC} from '../constants/event-types';
-import {ELEMENTAL, HEALING, MODIFIER, STATUS} from '../constants/spell-types';
+import {ELEMENTAL, HEALING, MODIFIER, STATUS, PHYSICAL, COMBO} from '../constants/spell-types';
 import {ALLIES, ENEMY} from '../constants/target-types';
 
 import Randomizer from '../utils/Randomizer';
@@ -37,6 +37,7 @@ export default class Battle{
         });
         this.team1 = team1;
         this.team2 = team2;
+        this.allowInput = true;
         this.started = false;
         this.complete = false;
         
@@ -49,7 +50,8 @@ export default class Battle{
         });
     }
     
-    execute(){
+    execute(allowInput = true){
+        this.allowInput = allowInput
         let events = [];
         while(true){
             const event = this.tick();
@@ -95,6 +97,8 @@ export default class Battle{
             player.realSpeed = player.speed;
             player.realMagicSpeed = player.magicSpeed;
             
+            player.statuses = player.statuses.filter(status => status.turns === undefined || status.turns > 0);
+            
             player.statuses.forEach(status => {
                 if(status.type === MODIFIER){
                     const property = 'real' + status.property.substring(0,1).toUpperCase() + status.property.substring(1);
@@ -116,10 +120,10 @@ export default class Battle{
         const targets = defendingTeam.players.filter(player => player.alive);
         const allies = attackingTeam.players.filter(player => player.alive);
         
-        if(!attacker.ai) return this.buildEvent({
+        if(!attacker.ai && this.allowInput) return this.buildEvent({
            type: INPUT,
            attacker,
-           targets,
+           enemies: targets,
            allies
         });
         
@@ -149,7 +153,10 @@ export default class Battle{
         if(effective) damage *= 1.5;
         if(weak) damage *= 0.5;
         const ko = this.applyDamage(target, damage);
-        attacker.acted = true;        
+        attacker.acted = true;      
+        attacker.statuses.forEach(status => {
+            if(status.turns) status.turns = status.turns - 1;
+        });
         return this.buildEvent({
             type: ATTACK,
             attacker,
@@ -164,6 +171,13 @@ export default class Battle{
     castSpell(caster, target, spell){
         caster.magicPoints -= spell.cost;
         caster.acted = true;
+        caster.statuses.forEach(status => {
+            if(status.turns) status.turns = status.turns - 1;
+        });
+        return this._castSpell(caster, target, spell);
+    }
+    
+    _castSpell(caster, target, spell){
         switch (spell.type) {
         	case HEALING:
         		return this.castHealing(caster, target, spell);
@@ -173,7 +187,11 @@ export default class Battle{
         	   return this.castModifier(caster, target, spell);
         	case STATUS: 
         	   return this.castStatusSpell(caster, target, spell);
-        }             
+        	case PHYSICAL:
+        	   return this.castPhysicalSpell(caster, target, spell);
+        	case COMBO:
+        	   return this.castComboSpell(caster, target, spell);
+        }
     }
     
     castHealing(caster, target, spell){
@@ -183,21 +201,27 @@ export default class Battle{
         return this.buildEvent({
             type: MAGIC,
             magicType: HEALING,
-            caster,
+            attacker: caster,
             target,
             spell,
-            delta,
+            hp: delta,
         });
     }
     
     castElemental(attacker, target, spell){
         let attackPower = attacker.realMagicAttack;
+        console.log(attackPower);
         if(spell.modifier) attackPower = attackPower * spell.modifier;
+        console.log(attackPower);
         let damage = this.calculateDamage(attackPower, target.realMagicDefense);
+        console.log(damage);
         const weak = spell.element && isElementWeakAgainst(spell.element, target.element);
+        console.log(weak);
         const effective = spell.element && !isElementWeakAgainst(spell.element, target.armour.element) && isElementEffectiveAgainst(spell.element, target.element);
+        console.log(effective);
         if(effective) damage *= 1.5;
         if(weak) damage *= 0.5;
+        console.log(damage);
         const ko = this.applyDamage(target, damage);
         return this.buildEvent({
             type: MAGIC,
@@ -212,13 +236,33 @@ export default class Battle{
         });  
     }
     
+    castPhysicalSpell(attacker, target, spell){
+        let attackPower = attacker.realAttack;
+        if(spell.modifier) attackPower = attackPower * spell.modifier;
+        let damage = this.calculateDamage(attackPower, target.realDefense);
+        const weak = spell.element && isElementWeakAgainst(spell.element, target.element);
+        const effective = spell.element && !isElementWeakAgainst(spell.element, target.armour.element) && isElementEffectiveAgainst(spell.element, target.element);
+        if(effective) damage *= 1.5;
+        if(weak) damage *= 0.5;
+        const ko = this.applyDamage(target, damage);
+        return this.buildEvent({
+            type: MAGIC,
+            magicType: PHYSICAL,            
+            attacker,
+            target,
+            spell,
+            damage,
+            ko
+        });  
+    }
+    
     castModifier(caster, target, spell){
         const delta = (target[spell.property] * spell.modifier) - target[spell.property];
         target[spell.property] = target[spell.property] + delta;
         return this.buildEvent({
             type: MAGIC,
             magicType: MODIFIER,            
-            caster,
+            attacker: caster,
             target,
             spell,
             delta
@@ -227,6 +271,7 @@ export default class Battle{
     
     castStatusSpell(caster, target, spell){
         const status = {
+            turns: spell.turns,
             strength: spell.strength,
             ...spell.status
         }
@@ -234,20 +279,39 @@ export default class Battle{
         return this.buildEvent({
             type: MAGIC,
             magicType: STATUS,            
-            caster,
+            attacker: caster,
             target,
-            spell
+            spell,
+            status: spell.status
         });  
     }
     
+    castComboSpell(caster, target, spell){
+        console.log('cast combo');
+        let event = {};
+        spell.spells.forEach(s => {
+            const t = spell.target === ENEMY && s.target === ALLIES ? caster : target;
+            const e = this._castSpell(caster, t, s);
+            console.log('e', e);
+            event = Object.assign({}, event, e);
+        });
+        event = Object.assign({}, event, {magicType: COMBO, attacker: caster, target, spell})
+        return event;
+    }
+    
     calculateDamage(attackRating, defenseRating){
-        let damage = ((attackRating * 3) - defenseRating) / 10;
+        console.log(attackRating, defenseRating);
+        let damage = ((attackRating * 5) - defenseRating) / 5;
+        console.log(damage);
         damage = this.randomizer.getRandomDeviatedInteger(damage, 0.1);
+        console.log(damage);
         return damage;
     }
     
     applyDamage(target, damage){
+        console.log(target.health, damage);
         target.health = Math.max(target.health - damage, 0);
+        console.log(target.health);
         const ko = target.health <= 0;
         if(ko) {
             target.alive = false;

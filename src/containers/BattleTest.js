@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 import * as actions from '../actions';
 
-import Index from '../components/Index';
+import BattleTest from '../components/BattleTest';
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -15,9 +15,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const IndexContainer = connect(
+const BattleTestContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Index);
+)(BattleTest);
 
-export default IndexContainer;
+export default BattleTestContainer;

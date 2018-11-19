@@ -72,4 +72,21 @@ export default class Randomizer{
         return result;
     }
     
+    randomizeArray(array){
+        return array.map((a) => ({sort: Math.random(), value: a}))
+            .sort((a, b) => a.sort - b.sort)
+            .map((a) => a.value);
+    }
+    
+    getTargetedRandomInteger(min, max, target, accuracy = 2){
+      const candidates = [];
+      for(let i=0; i<accuracy; i++){
+        const n = this.getRandomInteger(min, max);  
+        const d = Math.abs(n - target);
+        candidates.push({n, d});
+      }
+      candidates.sort((a, b) => a.d - b.d);
+      return candidates[0].n;
+    }
+    
 }

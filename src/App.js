@@ -1,6 +1,8 @@
 import 'typeface-roboto'
 import './App.less'
 
+import {GAME_STATE_PRE_BATTLE} from './constants';
+
 import React, {Component} from 'react'
 
 import { Provider } from 'react-redux';
@@ -20,8 +22,9 @@ import TradeNegotiations from './containers/TradeNegotiations';
 import Fixture from './containers/Fixture';
 import Settings from './containers/Settings';
 import LoadGame from './pages/LoadGame';
+import Battle from './containers/Battle';
 
-import Index from './containers/Index';
+import BattleTest from './containers/BattleTest';
 
 import TeamsGodMode from './containers/TeamsGodMode';
 
@@ -36,7 +39,7 @@ class App extends Component {
     return (
         <Provider store={store}>
             <div>
-                <Router>
+                {<Router>
                     <Switch>
                         <Route path="/" exact={true} render={(props) => <Home {...props} />} />
                         <Route path="/team/:id/:tab" exact={true} render={(props) => <Team {...props} />} />
@@ -53,10 +56,10 @@ class App extends Component {
                         <Route path="/settings" exact={true} render={(props) => <Settings {...props} />} />                                                 
                         <Route path="/teams/god" exact={true} render={(props) => <TeamsGodMode {...props} />} />                                                                         
                         <Route path="/load" exact={true} render={(props) => <LoadGame {...props} />} />                                                                         
-                        <Route path="/battle" exact={true} render={(props) => <Index {...props} />} />                                                                                                 
+                        <Route path="/battletest" exact={true} render={(props) => <BattleTest {...props} />} />                                                                                                 
                         <Route component={() => <div>Page not found</div>} />
                     </Switch>
-                </Router>
+                </Router>}
                 <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} hideProgressBar={true} />
                 <ModalWrapper />
                 <ConfirmModal />

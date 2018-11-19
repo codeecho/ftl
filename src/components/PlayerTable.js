@@ -12,6 +12,7 @@ export default function PlayerTable(props){
     let headings = onSelect ? [{label: ''}] : []
     headings = headings.concat([
         {label: 'Name'},
+        {label: 'Element'},        
         {label: 'Age'},        
     ]);
 
@@ -24,7 +25,7 @@ export default function PlayerTable(props){
     ]);
     
     headings = headings.concat([
-        {label: 'OVR', property: 'ability'},
+        {label: 'LVL', property: 'ability'},
         {label: 'POT', property: 'potential'}
     ]);
     
@@ -40,7 +41,7 @@ export default function PlayerTable(props){
 
 function PlayerRow(props){
     const {player, onSelect, selectIcon = 'arrow-left', selectButtonStyle = "default", year, stage, hideContract = false, hideStats = false} = props;
-    const {id, name, age, salary, contractExpiry, teamId, expectedSalary, attack, defense, speed, magicAttack, magicDefense, ability, potential} = player;
+    const {id, type, name, age, salary, contractExpiry, teamId, expectedSalary, attack, defense, speed, magicAttack, magicDefense, ability, potential, element} = player;
     const isContractExpiring = stage === GAME_STATE_CONTRACT_NEGOTIATIONS && contractExpiry === year;
     const playerHref = `#/player/${id}`;
     const classes = isContractExpiring ? 'info' : '';
@@ -50,6 +51,7 @@ function PlayerRow(props){
             <td>
                 <a href={playerHref} className="nowrap">{name}</a>
             </td>
+            <td>{element && element.name}</td>
             <td>{age}</td>
             {!hideStats && <td>{attack}</td>}
             {!hideStats && <td>{defense}</td>}
@@ -58,9 +60,9 @@ function PlayerRow(props){
             {!hideStats && <td>{magicDefense}</td>}
             <td>{ability}</td>           
             <td>{potential}</td>                        
-            {!hideContract && teamId && !isContractExpiring && <td><span className="nowrap">${salary}M {contractExpiry}</span></td>}
-            {!hideContract && teamId && isContractExpiring && <td><span className="nowrap">expects ${expectedSalary}M for 3 years</span></td>}            
-            {!hideContract && !teamId && <td><span className="nowrap">expects ${expectedSalary}M for 3 years</span></td>}
+            {!hideContract && teamId > 0 && !isContractExpiring && <td><span className="nowrap">${salary}M until {contractExpiry}</span></td>}
+            {!hideContract && teamId > 0 && isContractExpiring && <td><span className="nowrap">expects ${expectedSalary}M for 3 years</span></td>}            
+            {!hideContract && teamId < 0 && <td><span className="nowrap">expects ${expectedSalary}M for 3 years</span></td>}
         </tr>
     )
 }

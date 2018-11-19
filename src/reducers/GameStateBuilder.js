@@ -33,19 +33,8 @@ export default class GameStateBuilder{
             playerRatings: [],
             playoffs:[],
             champions: [],
-            tradedPicks: [
-                {
-                    year: 2019,
-                    round: 1,
-                    teamId: 6,
-                    ownerId: 10
-                }
-            ]
+            tradedPicks: []
         };
     }
     
 }
-
-
-// WEBPACK FOOTER //
-// src/reducers/GameStateBuilder.js

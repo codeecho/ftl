@@ -5,10 +5,10 @@ import {Grid, Row, Col, Table, Button, Glyphicon} from 'react-bootstrap';
 import Battle from '../models/Battle';
 
 import {START, END, WAIT, ATTACK, INPUT, MAGIC} from '../constants/event-types';
-import {ELEMENTAL, HEALING, MODIFIER, STATUS} from '../constants/spell-types';
+import {ELEMENTAL, HEALING, MODIFIER, STATUS, PHYSICAL} from '../constants/spell-types';
 import {ALLIES, ENEMY} from '../constants/target-types';
 
-export default class BattleField extends Component{
+export default class BattleSimulator extends Component{
     
     constructor(props){
         super(props);
@@ -173,18 +173,6 @@ export default class BattleField extends Component{
         const {showStats} = this.state;
         return (
             <div>
-                <div className="character-card">
-                    <div className="character-image">
-                        <img src="https://avatarfiles.alphacoders.com/548/5485.jpg"/>
-                    </div>
-                    <div className="character-details">
-                        <div className="character-name">{name}</div>
-                        <div className="character-stats">
-                            <div className="character-hp">{health}/{maxHealth}</div>
-                            <div className="character-mp">{magicPoints}/{maxMagicPoints}</div>                        
-                        </div>
-                    </div>
-                </div>
                 <div className={`${!alive && 'ko'} ` + `${isAttacker && 'attacker'} ` + `${isTarget && 'target'} `}>
                     <Table>
                         <tbody>
@@ -269,14 +257,14 @@ export default class BattleField extends Component{
     render(){
         return (
             <Grid>
-                <Row>
+                {<Row>
                     <Button onClick={this.props.buildTeams}>Change Teams</Button>                
                     <Button onClick={this.reset}>Reset</Button>                    
                     <Button onClick={this.playBattle}>Play</Button>
                     <Button onClick={this.tick}>Tick</Button>
                     <Button onClick={this.fastForward}>Fast Forward</Button>
                     <Button onClick={() => this.setState({showStats: !this.state.showStats})}>Toggle Stats</Button>                    
-                </Row>
+                </Row>}
                 <Row>
                     <Col xs={8}>
                         <Row>
@@ -292,7 +280,7 @@ export default class BattleField extends Component{
                                 <h3>Input Required</h3>
                                 <Table>
                                     <tbody>
-                                        {this.state.event.targets.map(target => {
+                                        {this.state.event.enemies.map(target => {
                                             return (<tr>
                                                 <td>{target.name}</td>                                    
                                                 <td>
@@ -314,7 +302,7 @@ export default class BattleField extends Component{
                             </Row>
                         }
                     </Col>       
-                    <Col xs={4}>
+                    {<Col xs={4}>
                         <h1>Output</h1>
                         <div>
                             <Button onClick={() => this.gotoFirstEvent()}><Glyphicon glyph="fast-backward" /></Button>
@@ -328,7 +316,7 @@ export default class BattleField extends Component{
                                 {this.state.events.slice(0, this.state.eventIndex).reverse().map(event => <Event {...event} />)}
                             </tbody>
                         </Table>
-                    </Col>                
+                    </Col>}              
                 </Row>
             </Grid>
         )
@@ -355,7 +343,7 @@ function Event(props){
         if(weak) text = text + ` It's not very effective.`
         text = text +  ` It inflicted ${damage} damage.`;
     }else if(type === MAGIC){
-        if(props.magicType === ELEMENTAL){
+        if(props.magicType === ELEMENTAL || props.magicType === PHYSICAL){
             const {attacker, target, spell, damage, effective, weak, ko} = props;
             text = `${attacker.name} cast ${spell.name} on ${target.name}.`
             if(effective) text = text + ` It's effective.`

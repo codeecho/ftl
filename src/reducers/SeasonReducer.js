@@ -11,7 +11,7 @@ import ordinal from 'ordinal';
 import { GAME_STATE_REGULAR_SEASON, GAME_STATE_PLAYOFFS, GAME_STATE_POST_SEASON, GAME_STATE_END_OF_SEASON, 
     GAME_STATE_CONTRACT_NEGOTIATIONS, GAME_STATE_FREE_AGENCY, GAME_STATE_DRAFT, FREE_AGENT_TEAM_ID,
     RETIRED_TEAM_ID, UNDRAFTED_TEAM_ID, STRATEGY_TITLE_CONTENDERS, STRATEGY_PLAYOFF_CONTENDERS, STRATEGY_REBUILDING,
-    STRATEGY_TITLE_HOPEFULS, STRATEGY_PLAYOFF_HOPEFULS, STRATEGY_TANKING} from '../constants';
+    STRATEGY_TITLE_HOPEFULS, STRATEGY_PLAYOFF_HOPEFULS, STRATEGY_TANKING, DRAFT_PICKS_PER_TEAM} from '../constants';
 
 export default class SeasonReducer{
     
@@ -20,6 +20,12 @@ export default class SeasonReducer{
         this.playerService = new PlayerService();
         this.teamService = new TeamService();
         this.teamStateModifier = new TeamStateModifier(this.teamService);
+    }
+    
+    setStage(action, state){
+        const {stage} = action;
+        const gameState = Object.assign({}, state.gameState, {stage});
+        return Object.assign({}, state, {gameState});
     }
     
     endRegularSeason(action, state){
@@ -135,13 +141,19 @@ export default class SeasonReducer{
     }
     
     applyTraining(action, state){
-        const {seed} = action;
-        const randomizer = new Randomizer(seed);
-        return stateModifier.modifyPlayers(state, player => {
-            const updatedPlayer = this.playerService.applyTraining(player);
+        const {updates} = action;
+        
+        const players = state.players.map(player => {
+            const playerUpdates = updates.filter(update => player.id === update.playerId);
+            let updatedPlayer = Object.assign({}, player);
+            playerUpdates.forEach(update => {
+                updatedPlayer = this.playerService.applyTraining(updatedPlayer, update.xp); 
+            });
             const expectedSalary = this.playerService.calculateExpectedSalary(updatedPlayer);
-            return Object.assign({}, updatedPlayer, {expectedSalary});
+            return Object.assign({}, updatedPlayer, {expectedSalary});            
         });
+        
+        return Object.assign({}, state, {players});
     }
     
     doDraft(action, state){
@@ -160,25 +172,20 @@ export default class SeasonReducer{
         const standings = state.standings.concat();
         standings.sort((a, b) => a.won - b.won);
         
-        standings.forEach((standing, i) => {
-            const player = draft[i];
-            const tradedPick = state.tradedPicks.find(pick => pick.year === year && pick.round === 1 && pick.teamId === standing.teamId);
-            player.teamId = tradedPick ? tradedPick.ownerId : standing.teamId;
-            player.contractExpiry = year+3;
-            if(player.teamId === teamId) toast.info(`You drafted ${player.name} with the ${ordinal(i+1)} pick in the 1st round of the draft`);
-        });
+        for(let j=1; j<=DRAFT_PICKS_PER_TEAM; j++){
+            standings.forEach((standing, i) => {
+                const player = draft[i];
+                const tradedPick = state.tradedPicks.find(pick => pick.year === year && pick.round === 1 && pick.teamId === standing.teamId);
+                player.teamId = tradedPick ? tradedPick.ownerId : standing.teamId;
+                player.contractExpiry = year+3;
+                if(player.teamId === teamId) toast.info(`You drafted ${player.name} with the ${ordinal(i+1)} pick in the ${ordinal(j)} round of the draft`);
+            });
+            
+            draft = draft.slice(standings.length);
+        }
         
-        draft = draft.slice(standings.length);
         
-        standings.forEach((standing, i) => {
-            const player = draft[i];
-            const tradedPick = state.tradedPicks.find(pick => pick.year === year && pick.round === 2 && pick.teamId === standing.teamId);
-            player.teamId = tradedPick ? tradedPick.ownerId : standing.teamId;
-            player.contractExpiry = year+3;
-            if(player.teamId === teamId) toast.info(`You drafted ${player.name} with the ${ordinal(i+1)} pick in the 2nd round of the draft`);
-        });
-        
-        draft = draftService.createDraftClass(state.gameState.year+1, state.nextPlayerId, state.teams.length*2);
+        draft = draftService.createDraftClass(state.gameState.year+1, state.nextPlayerId, state.teams.length);
         const nextPlayerId = state.nextPlayerId + draft.length;
         players = players.concat(draft);
         
@@ -238,7 +245,7 @@ export default class SeasonReducer{
                 
                 const {expectedSalary} = player;
                 
-                const resignPossibility = lineup.starters.includes(player) ? 0.8 : lineup.secondUnit.includes(player) ? 0.6 : 0;
+                const resignPossibility = lineup.starters.includes(player) ? 0.8 : lineup.secondUnit.includes(player) ? 0.5 : 0;
                 
                 const shouldResign = expectedSalary < capSpace && randomizer.getRandomBoolean(resignPossibility);
                 
@@ -281,7 +288,7 @@ export default class SeasonReducer{
                 
                 if(state.onlineGame.users.find(user => user.teamId === team.id)) return;
                 
-                if(players.filter(player => player.teamId === team.id).length >= 17) return;
+                if(players.filter(player => player.teamId === team.id).length >= 10) return;
                 
                 const payroll = team.payroll;
                 let availableSalary = salaryCap - payroll;

@@ -1,10 +1,11 @@
-import {ELEMENTAL, HEALING, MODIFIER, STATUS} from '../constants/spell-types';
+import {ELEMENTAL, PHYSICAL, HEALING, MODIFIER, STATUS, COMBO} from '../constants/spell-types';
 import {ALLIES, ENEMY} from '../constants/target-types';
 
 export default class Spell{
     
-    constructor(name, type, target, cost){
+    constructor(name, description, type, target, cost){
         this.name = name;
+        this.description = description;
         this.type = type;
         this.target = target;
         this.cost = cost;
@@ -12,10 +13,20 @@ export default class Spell{
     
 }
 
+export class Physical extends Spell{
+    
+    constructor(name, description, cost, modifier = 1, element){
+        super(name, description, PHYSICAL, ENEMY, cost);
+        this.modifier = modifier;
+        this.element = element;
+    }
+    
+}
+
 export class Elemental extends Spell{
     
-    constructor(name, element, cost, modifier = 1){
-        super(name, ELEMENTAL, ENEMY, cost);
+    constructor(name, description, element, cost, modifier = 1){
+        super(name, description, ELEMENTAL, ENEMY, cost);
         this.element = element;
         this.modifier = modifier;
     }
@@ -24,8 +35,8 @@ export class Elemental extends Spell{
 
 export class Healing extends Spell{
     
-    constructor(name, cost, strength){
-        super(name, HEALING, ALLIES, cost);
+    constructor(name, description, cost, strength){
+        super(name, description, HEALING, ALLIES, cost);
         this.strength = strength;
     }
     
@@ -33,8 +44,8 @@ export class Healing extends Spell{
 
 export class Modifier extends Spell{
     
-    constructor(name, cost, target, property, modifier){
-        super(name, MODIFIER, target, cost);
+    constructor(name, description, cost, target, property, modifier){
+        super(name, description, MODIFIER, target, cost);
         this.property = property;
         this.modifier = modifier;
     }
@@ -43,10 +54,20 @@ export class Modifier extends Spell{
 
 export class StatusSpell extends Spell{
     
-    constructor(name, cost, target, status, strength = 1){
-        super(name, STATUS, target, cost);
+    constructor(name, description, cost, status, strength = 1, turns = 1){
+        super(name, description, STATUS, status.target, cost);
         this.status = status;
         this.strength = strength;
+        this.turns = turns;
     }
     
+}
+
+export class ComboSpell extends Spell{
+
+    constructor(name, description, target, cost, spells){
+        super(name, description, COMBO, target, cost);
+        this.spells = spells;
+    }
+
 }

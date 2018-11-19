@@ -1,5 +1,7 @@
 import PlayerBuilder from '../services/PlayerBuilder';
 
+import {DRAFT_PICKS_PER_TEAM} from '../constants'
+
 export default class DraftService{
     
     constructor(randomizer){
@@ -8,6 +10,7 @@ export default class DraftService{
     }
     
     createDraftClass(year, nextId, size){
+        size = size * DRAFT_PICKS_PER_TEAM;
         const draftClass = [];
         const firstRange = this.randomizer.getRandomInteger(1, size/10);
         const secondRange = this.randomizer.getRandomInteger(size/10, size/5);

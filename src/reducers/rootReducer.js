@@ -3,7 +3,7 @@ import { LOAD_GAME_DATA, SET_TEAM, SAVE_RESULTS, END_REGULAR_SEASON, END_SEASON,
     CLIENT_ADVANCE, NEW_GAME, SIGN_FREE_AGENT, HANDLE_EXPIRING_CONTRACTS, CREATE_FREE_AGENTS, AI_SIGN_FREE_AGENTS,
     EXTEND_CONTRACT, DO_DRAFT, APPLY_TRAINING, SET_TRADE_PROPOSAL, COMPLETE_TRADE, RELEASE_PLAYER, CLIENT_GAME_STATE,
     CLIENT_SIGN_FREE_AGENT, CLIENT_EXTEND_CONTRACT, CLIENT_RELEASE_PLAYER, CLIENT_COMPLETE_TRADE, CREATE_NEXT_PLAYOFF_ROUND,
-    END_PLAYOFFS, ADD_STARTER, REMOVE_STARTER } from '../actions';
+    END_PLAYOFFS, SET_STARTERS, SET_STAGE, SAVE_RESULT } from '../actions';
     
 import { GAME_STATE_REGULAR_SEASON } from '../constants';
 
@@ -59,8 +59,9 @@ function handleAction(state, action){
         case COMPLETE_TRADE: return playerActionsReducer.completeTrade(action, state);
         case RELEASE_PLAYER: return playerActionsReducer.releasePlayer(action, state);
         
-        case ADD_STARTER: return teamActionsReducer.addStarter(action, state);
-        case REMOVE_STARTER: return teamActionsReducer.removeStarter(action, state);
+        case SET_STARTERS: return teamActionsReducer.setStarters(action, state);
+        
+        case SET_STAGE: return seasonReducer.setStage(action, state);
         
         case HANDLE_EXPIRING_CONTRACTS: return seasonReducer.handleExpiringContracts(action, state);
         case APPLY_TRAINING: return seasonReducer.applyTraining(action, state);
@@ -71,7 +72,8 @@ function handleAction(state, action){
         case CREATE_NEXT_PLAYOFF_ROUND: return seasonReducer.createNextPlayoffRound(action, state);
         case END_PLAYOFFS: return seasonReducer.endPlayoffs(action, state);
         case END_SEASON: return seasonReducer.endSeason(action, state);
-        
+
+        case SAVE_RESULT: return fixturesReducer.saveResult(action, state);        
         case SAVE_RESULTS: return fixturesReducer.saveResults(action, state);
         
         case HOST_ONLINE_GAME: return onlineGameReducer.hostOnlineGame(action, state);

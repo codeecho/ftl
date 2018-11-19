@@ -9,6 +9,7 @@ import { playerReadyEpic } from './playerReadyEpic';
 import { clientAdvanceEpic } from './clientAdvanceEpic';
 import { userConnectedEpic } from './userConnectedEpic';
 import { serverEventEpic } from './serverEventEpic';
+import { simulateSeasonEpic } from './simulateSeasonEpic';
 
 const debugEpic = (action$, store) =>
   action$
@@ -25,12 +26,8 @@ const rootEpic = combineEpics(
   playerReadyEpic,
   clientAdvanceEpic,
   userConnectedEpic,
-  serverEventEpic
+  serverEventEpic,
+  simulateSeasonEpic
 );
 
 export default rootEpic;
-
-
-
-// WEBPACK FOOTER //
-// src/epics/index.js

@@ -9,21 +9,9 @@ export default class PlayerActionsReducer{
 
     }
     
-    addStarter(action, state){
-        const {playerId} = action;
-        if(state.gameState.starters.length === 5 || state.gameState.starters.includes(playerId)) return state;
-        const starters = state.gameState.starters.concat(playerId);
-        return stateModifier.modifyGameState(state, {starters});
-    }
-    
-    removeStarter(action, state){
-        const {playerId} = action;
-        const starters = state.gameState.starters.filter(id => id !== playerId);
-        return stateModifier.modifyGameState(state, {starters});
+    setStarters(action, state){
+        const {starters} = action;
+        return stateModifier.modifyGameState(state, {starters});        
     }
 
 }
-
-
-// WEBPACK FOOTER //
-// src/reducers/PlayerActionsReducer.js

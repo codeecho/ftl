@@ -2,12 +2,15 @@ import React from 'react';
 
 import { Navbar, Nav, NavItem, NavDropdown, Button, MenuItem, Glyphicon} from 'react-bootstrap';
 
-import {GAME_STATE_REGULAR_SEASON, GAME_STATE_END_OF_SEASON, GAME_STATE_PLAYOFFS} from '../constants';
+import {GAME_STATE_REGULAR_SEASON, GAME_STATE_PRE_BATTLE, GAME_STATE_BATTLE, GAME_STATE_POST_BATTLE, GAME_STATE_END_OF_SEASON, GAME_STATE_PLAYOFFS} from '../constants';
 
 import modal from '../utils/modal';
 
 import GameMenu from '../containers/GameMenu';
 import TabMenu from '../components/TabMenu';
+import PreBattleFixtures from '../containers/PreBattleFixtures';
+import PostBattleResults from '../containers/PostBattleResults';
+import Battle from '../containers/Battle';
 
 export default function PageWrapper(props){
     
@@ -20,12 +23,12 @@ export default function PageWrapper(props){
         <div id={id}>
         
             <Navbar fluid className='header'>
-                  <Navbar.Brand>
+                  {![GAME_STATE_PRE_BATTLE, GAME_STATE_BATTLE, GAME_STATE_POST_BATTLE].includes(stage) && <Navbar.Brand>
                     <a onClick={() => window.history.back()} className="header-button"><Glyphicon glyph="chevron-left"/></a>
                     <a onClick={() => modal.show({hideClose: true, body: <GameMenu />})} className="header-button"><Glyphicon glyph="menu-hamburger"/></a>                    
                     <span className="title"> {title || 'FTL'}</span>
                     {false && props.teamId && <span className="subtitle">{stage + ' ' + year + ' Round ' + round}</span>}
-                  </Navbar.Brand>
+                  </Navbar.Brand>}
                 {props.teamId &&
                     <Nav pullRight>
                       { false && ([GAME_STATE_REGULAR_SEASON].includes(stage) && (!isOnlineGame || isHost)) && <NavDropdown eventKey={1} title="Continue" disabled={!canAdvance}>
@@ -37,10 +40,10 @@ export default function PageWrapper(props){
                         {(false && (![GAME_STATE_REGULAR_SEASON, GAME_STATE_PLAYOFFS].includes(stage) || (isOnlineGame && !isHost))) && <NavItem onClick={() => props.advance(isOnlineGame, 1)} disabled={!canAdvance}>Continue</NavItem>                  }
 
                     </Nav>}
-                    {tabs.length > 1 && <Navbar.Brand className="">
+                    {![GAME_STATE_PRE_BATTLE, GAME_STATE_BATTLE, GAME_STATE_POST_BATTLE].includes(stage) && tabs.length > 1 && <Navbar.Brand className="">
                         <a onClick={() => modal.show({hideClose: true, body: <TabMenu tabs={tabs} />})} className="header-button tabs-button"><Glyphicon glyph="option-vertical"/></a>                                                            
                     </Navbar.Brand>}
-                 {false && <div className="pull-left tabs">
+                 {![GAME_STATE_PRE_BATTLE, GAME_STATE_BATTLE, GAME_STATE_POST_BATTLE].includes(stage) && <div className="pull-left tabs hidden-xs hidden-sm">
                     {tabs.map(tab => <a href={tab.target} className={tab.id === selectedTab ? 'active' : ''}>{tab.label}</a>)}                   
                 </div>}
             </Navbar>
@@ -65,7 +68,10 @@ export default function PageWrapper(props){
             </div>}
              
             <div className="container-fluid main-content">
-                {props.children}
+                {stage === GAME_STATE_PRE_BATTLE && <PreBattleFixtures />}
+                {stage === GAME_STATE_BATTLE && <Battle />}                
+                {stage === GAME_STATE_POST_BATTLE && <PostBattleResults />}                
+                {![GAME_STATE_PRE_BATTLE, GAME_STATE_BATTLE, GAME_STATE_POST_BATTLE].includes(stage) && props.children}
             </div>
         </div>
     )

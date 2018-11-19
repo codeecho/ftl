@@ -6,7 +6,7 @@ export const STATS_TAB_ID = 'stats';
 export const DRAFT_PICKS_TAB_ID = 'draft-picks';
 
 export function getTeamTabs(team, isPlayerTeam){
-    let tabs = [{ id: undefined, label: 'Squad', target: `#/team/${team.id}`, icon: 'http://icons.iconarchive.com/icons/icojam/blue-bits/128/shield-icon.png'}]
+    let tabs = [{ id: undefined, label: 'Squad', target: `#/team/${team.id}`, icon: 'assets/shield-icon.png'}]
     
     if(isPlayerTeam){
         tabs = tabs.concat({ id: LINEUP_TAB_ID, label: 'Lineup', target: `#/team/${team.id}/${LINEUP_TAB_ID}`});
@@ -35,16 +35,20 @@ export const standingsTabs = [
     { id: undefined, label: 'Standings', target: `#/standings`},
 //    { id: PLAYOFFS_TAB_ID, label: 'Playoffs', target: `#/standings/${PLAYOFFS_TAB_ID}`},    
 //    { id: STATS_TAB_ID, label: 'Player Stats', target: `#/standings/${STATS_TAB_ID}`},
-//    { id: RATINGS_TAB_ID, label: 'Player Ratings', target: `#/standings/${RATINGS_TAB_ID}`},
-    { id: HISTORY_TAB_ID, label: 'History', target: `#/standings/${HISTORY_TAB_ID}`}    
+    { id: RATINGS_TAB_ID, label: 'Player Ratings', target: `#/standings/${RATINGS_TAB_ID}`}
+//    { id: HISTORY_TAB_ID, label: 'History', target: `#/standings/${HISTORY_TAB_ID}`}    
 ];
 
 export const TRADING_BLOCK_TAB_ID = 'tradingBlock';
 export const TRADE_TAB_ID = 'trade';
+export const FREE_AGENTS_TAB_ID = 'freeAgents';
+export const DRAFT_TAB_ID = 'draft';
 
 export const tradeTabs = [
     //{id: TRADING_BLOCK_TAB_ID, label: 'Request Proposals', target: '#/tradingBlock'},
-    //{id: TRADE_TAB_ID, label: 'Make a Trade', target: '#/trade'}
+    {id: TRADE_TAB_ID, label: 'Trade Assets', target: '#/trade'},
+    {id: FREE_AGENTS_TAB_ID, label: 'Free Agents', target: '#/freeAgents'},
+    {id: DRAFT_TAB_ID, label: 'Draft', target: '#/draft'}
 ];
 
 
