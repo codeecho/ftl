@@ -28,6 +28,7 @@
     "redux-socket.io": "^1.4.0",
     "rxjs": "^5.5.6",
     "seedrandom": "^2.4.3",
+    "surge": "^0.20.1",
     "typeface-roboto": "0.0.50",
     "typeface-source-code-pro": "0.0.54"
   },
